@@ -26,7 +26,7 @@ function layDuLieuDauVao() {
     diemLy,
     diemHoa
   );
-  sinhVien.tinhDiemTrungBinh();
+  // sinhVien.tinhDiemTrungBinh();
   return sinhVien;
 }
 
