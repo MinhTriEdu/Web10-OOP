@@ -30,7 +30,22 @@ function DanhSachSinhVien() {
     var index = this.timSinhVien(sv.maSV);
     if (index !== -1) {
       this.list[index] = sv;
+      // this.list.splice(index, 1, sv);
     }
+  };
+  // Abc
+  // abc
+  //  index of => a
+  this.search = function (keyword) {
+    var arr = [];
+    for (var i = 0; i < this.list.length; i++) {
+      if (
+        this.list[i].tenSV.toLowerCase().indexOf(keyword.toLowerCase()) !== -1
+      ) {
+        arr.push(this.list[i]);
+      }
+    }
+    return arr;
   };
 }
 

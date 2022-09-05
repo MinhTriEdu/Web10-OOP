@@ -15,6 +15,30 @@ function layDuLieuDauVao() {
   var diemLy = getEle("txtDiemLy").value;
   var diemHoa = getEle("txtDiemHoa").value;
 
+  if (
+    maSV.trim() === "" &&
+    tenSV.trim() === "" &&
+    email.trim() === "" &&
+    matKhau.trim() === "" &&
+    ngaySinh.trim() === "" &&
+    khoaHoc.trim() === "" &&
+    diemToan.trim() === "" &&
+    diemLy.trim() === "" &&
+    diemHoa.trim() === ""
+  ) {
+  } else {
+    validateCheckNullValue("txtMaSV", "errMaSV");
+    validateCheckNullValue("txtTenSV", "errName");
+    validateCheckNullValue("txtEmail", "errMail");
+    validateCheckNullValue("txtPass", "errpassword");
+    validateCheckNullValue("txtNgaySinh", "errNgaySinh");
+    validateCheckNullValue("khSV", "errKhoaHoc");
+    validateCheckNullValue("txtDiemToan", "errToan");
+    validateCheckNullValue("txtDiemLy", "errLy");
+    validateCheckNullValue("txtDiemHoa", "errHoa");
+    return;
+  }
+  checkEmail("txtEmail", "errMail");
   var sinhVien = new SinhVien(
     maSV,
     tenSV,
@@ -57,7 +81,7 @@ function deleteStudent(id) {
   //ham xoa nhan vien, xoa theo vi tri index tim duoc, neu index ===-1 thi khong xoa
   dssv.xoaNhanVien(index);
   saveListStudentToLocal();
-   taoBang(dssv.list)
+  taoBang(dssv.list);
   //sau khi xoa xong can render lai table, goi lai ham taoBang()
   // taoBang(dssv.list);
 }
@@ -79,7 +103,6 @@ getDataFromLocal();
 
 function pushToForm(msv) {
   var sv = dssv.timSinhVienTheoMa(msv);
-console.log(sv);
   getEle("txtMaSV").value = sv.maSV;
   getEle("txtTenSV").value = sv.tenSV;
   getEle("txtEmail").value = sv.email;
@@ -89,22 +112,54 @@ console.log(sv);
   getEle("txtDiemToan").value = sv.diemToan;
   getEle("txtDiemLy").value = sv.diemLy;
   getEle("txtDiemHoa").value = sv.diemHoa;
-  getEle("btnUpdate").style.display='inline-block'
+  getEle("btnUpdate").style.display = "inline-block";
+}
+
+function validateCheckNullValue(id, err) {
+  var value = getEle(id).value;
+  var errSpan = getEle(err);
+  errSpan.style.color = "red";
+  value === ""
+    ? (errSpan.innerHTML = "(*) Không được để trống")
+    : (errSpan.innerHTML = "");
+}
+function checkEmail(id, err) {
+  console.log('check email')
+  var letter = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  var value = getEle(id).value;
+  var errdiv = getEle(err);
+  if (value.match(letter)) {
+    errdiv.innerHTML("");
+    return;
+  } else {
+    errdiv.style.color = "red";
+    errdiv.innerHTML("Email error");
+  }
 }
 
 getEle("btnAdd").addEventListener("click", function () {
   event.preventDefault();
   var sinhVien = layDuLieuDauVao();
-  dssv.themSinhVien(sinhVien);
-  taoBang(dssv.list);
-  saveListStudentToLocal();
+  if (sinhVien !== undefined) {
+    dssv.themSinhVien(sinhVien);
+    taoBang(dssv.list);
+    saveListStudentToLocal();
+  }
 });
-getEle("btnUpdate").addEventListener('click',function(){
-  event.preventDefault()
-  var data= layDuLieuDauVao()
-  dssv.capNhat(data)
-  saveListStudentToLocal(dssv.list)
-  taoBang(dssv.list)
-  //reset form
-  getEle('formSV').reset()
-})
+getEle("btnUpdate").addEventListener("click", function () {
+  event.preventDefault();
+  var data = layDuLieuDauVao();
+
+  if (data !== undefined) {
+    dssv.capNhat(data);
+    saveListStudentToLocal();
+    taoBang(dssv.list);
+    //reset form
+    getEle("formSV").reset();
+  }
+});
+getEle("txtSearch").addEventListener("keyup", function () {
+  var keyword = getEle("txtSearch").value;
+  var listStudentSearch = dssv.search(keyword);
+  taoBang(listStudentSearch);
+});
