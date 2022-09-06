@@ -1,4 +1,5 @@
 var dssv = new DanhSachSinhVien();
+var validate = new Validation();
 
 function getEle(id) {
   return document.getElementById(id);
@@ -15,30 +16,23 @@ function layDuLieuDauVao() {
   var diemLy = getEle("txtDiemLy").value;
   var diemHoa = getEle("txtDiemHoa").value;
 
-  if (
-    maSV.trim() === "" &&
-    tenSV.trim() === "" &&
-    email.trim() === "" &&
-    matKhau.trim() === "" &&
-    ngaySinh.trim() === "" &&
-    khoaHoc.trim() === "" &&
-    diemToan.trim() === "" &&
-    diemLy.trim() === "" &&
-    diemHoa.trim() === ""
-  ) {
-  } else {
-    validateCheckNullValue("txtMaSV", "errMaSV");
-    validateCheckNullValue("txtTenSV", "errName");
-    validateCheckNullValue("txtEmail", "errMail");
-    validateCheckNullValue("txtPass", "errpassword");
-    validateCheckNullValue("txtNgaySinh", "errNgaySinh");
-    validateCheckNullValue("khSV", "errKhoaHoc");
-    validateCheckNullValue("txtDiemToan", "errToan");
-    validateCheckNullValue("txtDiemLy", "errLy");
-    validateCheckNullValue("txtDiemHoa", "errHoa");
-    return;
-  }
-  checkEmail("txtEmail", "errMail");
+  //check validate null
+  // biến err dùng để lưu trữ tổng số lỗi khi validate
+  var err = 0;
+  
+  validate.kiemTraRong("txtMaSV", "errMaSV") && err++;
+  validate.kiemTraRong("txtTenSV", "errName") && err++;
+  validate.kiemTraRong("txtNgaySinh", "errNgaySinh") && err++;
+  validate.kiemTraRong("txtDiemToan", "errToan") && err++;
+  validate.kiemTraRong("txtDiemLy", "errLy") && err++;
+  validate.kiemTraRong("txtDiemHoa", "errHoa") && err++;
+  validate.kiemTraMatKhau("txtPass", "errpassword") && err++;
+  validate.kiemTraKhoaHoc("khSV", "errKhoaHoc") && err++;  
+  validate.kiemTraEmail("txtEmail", "errMail") && err++;
+
+
+  if (err !== 0) return;
+
   var sinhVien = new SinhVien(
     maSV,
     tenSV,
@@ -124,7 +118,7 @@ function validateCheckNullValue(id, err) {
     : (errSpan.innerHTML = "");
 }
 function checkEmail(id, err) {
-  console.log('check email')
+  console.log("check email");
   var letter = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   var value = getEle(id).value;
   var errdiv = getEle(err);
